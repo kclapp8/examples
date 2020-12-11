@@ -1,4 +1,4 @@
-/* the below example is from a script I wrote that will insert entries into a target table based on input from a temp table.
+/* The below example is from a script I wrote that will insert entries into a target table based on input from a temp table.
 When the insert is done, I expect to see distinct entries in AUH1_REQUESTS for all the customers found in the TC_USG_IMPACT table.
 
 TC_usg_impact is the source table which has a list of customers
@@ -7,6 +7,8 @@ If I have more than one record for the same customer in the temp table, I only w
 Some of the values in the INSERT are coming from the input table(Customer id, cycle code) some are hard-coded(Application ID) and some are generated (SYSDATE)
 I am using the CASE statement to checking the bill cycle against the sysdate in order to determine what month to use for my insert.
 I could probably also use a CASE statement for the determining the year, but it's not really required for how this script is used.
+
+SQLMODEC is defined earlier in the script as COMMIT or ROLLBACK, depending on the environment.
 */
 
     sqlplus ${APP_CONNECT_STRING}  << EOSQL
