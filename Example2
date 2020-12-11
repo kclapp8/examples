@@ -1,5 +1,5 @@
 /* the below example is from a script I wrote that will insert entries into a target table based on input from a temp table.
-When the insert is done, I expect to see entries in AUH1_REQUESTS for all the customers foind in the TC_USG_IMPACT table.
+When the insert is done, I expect to see distinct entries in AUH1_REQUESTS for all the customers found in the TC_USG_IMPACT table.
 
 TC_usg_impact is the source table which has a list of customers
 The insert statement contains the colums that must be populated in AUH1_REQUESTS.
