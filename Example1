@@ -15,6 +15,10 @@ This query will pull the data from APE1_ACCUMULATORS table, and if there is a re
 , then it will print the data from ADJ1_ID_MAPPING also.
 
 Specifically, I'm joining with ADJ1_ID_MAPPING because I want the ENTITY_NAME field, and I'm using the ACCUM_TYPE_ID to get it.
+I also know that I can have muliple tc_id values in ADJ1_ID_MAPPING that match my accum_type_id, so I have limited the query to only pull
+where the ADJ1_MAPPING_ID has an entity_type = 'A'.
+I'm interested in pulling data from APE1_ACCUMULATORS specifically for my customer, in month 12 cycle 15.  
+I further want to narrow down my results by only pulling a subset of data - where either the owner_id is a specific value or the owner type is a specific value.
 @PUSG_99 is a DB syn so that I can access the APE1_ACCUMULATOR table which resides on a different DB User/Instance.
 
 */
