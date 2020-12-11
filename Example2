@@ -1,0 +1,65 @@
+/* the below example is from a script I wrote that will insert entries into a target table based on input from a temp table.
+When the insert is done, I expect to see entries in AUH1_REQUESTS for all the customers foind in the TC_USG_IMPACT table.
+
+TC_usg_impact is the source table which has a list of customers
+The insert statement contains the colums that must be populated in AUH1_REQUESTS.
+If I have more than one record for the same customer in the temp table, I only want to put one entry in the target table
+Some of the values in the INSERT are coming from the input table(Customer id, cycle code) some are hard-coded(Application ID) and some are generated (SYSDATE)
+I am using the CASE statement to checking the bill cycle against the sysdate in order to determine what month to use for my insert.
+I could probably also use a CASE statement for the determining the year, but it's not really required for how this script is used.
+*/
+
+    sqlplus ${APP_CONNECT_STRING}  << EOSQL
+        SET SERVEROUTPUT ON;
+        set pagesize 1000
+        set underline off
+        set linesize 150
+        set timing on
+
+        spool ${LOG_DIR}/fix_uh_rjetmoevnt_flat_env.lst;
+        whenever sqlerror exit sql.sqlcode rollback;
+
+        INSERT INTO AUH1_REQUESTS (REQUEST_TYPE,
+            REQUEST_ID,
+            PARAM_TYPE,
+            PARAM_VALUE,
+            cycle_CODE,
+            cycle_INSTANCE,
+            cycle_YEAR,
+            FROM_DATE,
+            TO_DATE,
+            MARK_TYPE,
+            STATUS,
+            SYS_CREATION_DATE,
+            APPLICATION_ID,
+            DL_UPDATE_STAMP,
+            DAY_IN_MONTH)
+        (SELECT distinct 'D',
+            99999999,
+            'C',
+            CUSTOMER_ID,
+            BILL_cycle,
+            CASE
+              WHEN (BILL_cycle > TO_NUMBER (TO_CHAR (SYSDATE, 'dd')))
+              THEN
+                TO_NUMBER (TO_CHAR (SYSDATE, 'mm'))
+              ELSE
+                TO_NUMBER (TO_CHAR (SYSDATE, 'mm')) + 1
+              END AS cycle_MONTH,
+            TO_CHAR(SYSDATE,'YYYY'),
+            SYSDATE,
+            SYSDATE,
+            1,
+            'R ',
+            SYSDATE,
+            'MNUHF ',
+            0,
+            TO_CHAR(SYSDATE,'DD')
+            FROM CUSTOMER
+            WHERE CUSTOMER_ID IN (SELECT DISTINCT CUSTOMER_ID FROM TC_usg_impact));
+
+        ${SQLMODEC};
+
+    spool off;
+    exit
+
