@@ -1,5 +1,4 @@
-SELECT entity_name, owner_id, owner_type, l9_counter_status, d_1 "last SNR date", c32_1 "last SNR info", l9_acc_unit
-, l9_acc_chg, l9_offer_id, l9_pro_quota, l9_utl_quota, a.*
+SELECT entity_name, owner_id, owner_type, l9_counter_status, d_1 "last SNR date", c32_1 "last SNR info", l9_acc_unit, l9_acc_chg, l9_offer_id, l9_pro_quota, l9_utl_quota, a.*
 FROM ape1_accumulators@pusg_99 a LEFT JOIN adj1_id_mapping b ON a.accum_type_id = b.tc_id
 WHERE customer_id = 999999999
        AND (owner_id = 8888888888  OR owner_type = 'A')
@@ -8,17 +7,17 @@ WHERE customer_id = 999999999
        AND b.entity_type = 'A'
 ;
 
-/* This is a typical query that I run quite often. 
-APE1_ACCUMULATORS is a table that contains some generically named fields
-ADJ1_ID_MAPPING table has column names to match the generic names in APE1_RATED_EVENT
-This query will pull the data from APE1_ACCUMULATORS table, and if there is a record in the ADJ1_ID_MAPPING table that matches the accum_type_id
-, then it will print the data from ADJ1_ID_MAPPING also.
+/* This is a typical query that I use 
+   APE1_ACCUMULATORS is a table that contains some generically named fields
+   ADJ1_ID_MAPPING table has column names to match the generic names in APE1_RATED_EVENT
+   This query will pull the data from APE1_ACCUMULATORS table, and if there is a record in the ADJ1_ID_MAPPING table that matches the accum_type_id, 
+   then it will print the data from ADJ1_ID_MAPPING also.
 
-Specifically, I'm joining with ADJ1_ID_MAPPING because I want the ENTITY_NAME field, and I'm using the ACCUM_TYPE_ID to get it.
-I also know that I can have muliple tc_id values in ADJ1_ID_MAPPING that match my accum_type_id, so I have limited the query to only pull
-where the ADJ1_MAPPING_ID has an entity_type = 'A'.
-I'm interested in pulling data from APE1_ACCUMULATORS specifically for my customer, in month 12 cycle 15.  
-I further want to narrow down my results by only pulling a subset of data - where either the owner_id is a specific value or the owner type is a specific value.
-@PUSG_99 is a DB syn so that I can access the APE1_ACCUMULATOR table which resides on a different DB User/Instance.
+   Specifically, I'm joining with ADJ1_ID_MAPPING because I want the ENTITY_NAME field, and I'm using the ACCUM_TYPE_ID to get it.
+   I also know that I can have muliple tc_id values in ADJ1_ID_MAPPING that match my accum_type_id, so I have limited the query to only pull
+   where the ADJ1_MAPPING_ID has an entity_type = 'A'.
+   I'm interested in pulling data from APE1_ACCUMULATORS specifically for my customer, in month 12 cycle 15.  
+   I further want to narrow down my results by only pulling a subset of data - where either the owner_id is a specific value or the owner type is a specific value.
+   @PUSG_99 is a DB syn so that I can access the APE1_ACCUMULATOR table which resides on a different DB User/Instance.
 
 */
