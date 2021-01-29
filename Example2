@@ -9,6 +9,7 @@ I am using the CASE statement to checking the bill cycle against the sysdate in 
 I could probably also use a CASE statement for the determining the year, but it's not really required for how this script is used.
 
 SQLMODEC is defined earlier in the script as COMMIT or ROLLBACK, depending on the environment.
+APPDBLINK is defined earlier in the script to allow me to access a table on another db instance that does not have a db link
 */
 
     sqlplus ${APP_CONNECT_STRING}  << EOSQL
@@ -58,7 +59,7 @@ SQLMODEC is defined earlier in the script as COMMIT or ROLLBACK, depending on th
             0,
             TO_CHAR(SYSDATE,'DD')
             FROM CUSTOMER
-            WHERE CUSTOMER_ID IN (SELECT DISTINCT CUSTOMER_ID FROM TC_usg_impact));
+            WHERE CUSTOMER_ID IN (SELECT DISTINCT CUSTOMER_ID FROM TC_usg_impact${APPDBLINK}));
 
         ${SQLMODEC};
 
